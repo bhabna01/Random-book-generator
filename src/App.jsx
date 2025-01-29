@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {faker} from '@faker-js/faker';
 import { v4 as uuidv4 } from 'uuid';
+import { CSVLink } from 'react-csv';
 
 function generateBookTitle(language) {
   // Define patterns for each language
@@ -97,8 +98,7 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
-
-  
+ 
   
  
   
@@ -122,19 +122,19 @@ const generateBooks = useCallback((pageNum) => {
           })),
           cover: faker.image.url({ width: 200, height: 300, category: "book" }),
       };
-  }).filter(book => book.likes >= likes); // ✅ Filter based on `likes`
+  }).filter(book => book.likes >= likes); 
 
   setBooks((prevBooks) => (pageNum === 1 ? newBooks : [...prevBooks, ...newBooks]));
   setLoading(false);
-}, [language, seed, likes, reviews]); // ✅ `likes` is now properly used
+}, [language, seed, likes, reviews]);
 
-// Regenerate books whenever language, seed, or likes change
+
 
 
 
 useEffect(() => {
-  // Reset the page to 1 and fetch new books whenever parameters change
-  setPage(1); // Reset page to 1 for a fresh reload
+  
+  setPage(1); 
 }, [language, seed, likes, reviews]);
   
   useEffect(() => {
@@ -161,6 +161,16 @@ useEffect(() => {
     <div className="p-4 bg-gray-100 min-h-screen">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-6">Random Book Generator</h1>
+        <div className="flex justify-between mb-4">
+        
+        <CSVLink
+          data={books}
+          filename="books.csv"
+          className="p-2 bg-red-500 text-white rounded-md"
+        >
+          Export CSV
+        </CSVLink>
+      </div>
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -276,6 +286,7 @@ useEffect(() => {
         </div>
       </div>
     </div>
+    
   );
 };
 
