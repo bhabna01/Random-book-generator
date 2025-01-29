@@ -239,19 +239,55 @@ const App = () => {
 // }, [language, seed, likes, reviews]);
 
 
+// const generateBooks = useCallback(() => {
+//   setLoading(true);
+
+//   faker.locale = language;
+
+//   const newBooks = Array.from({ length: page * 10 }, (_, index) => {
+//       faker.seed(seed + index);  
+      
+//       return {
+//           isbn: uuidv4(), 
+//           title: generateBookTitle(language, seed + index), 
+//           author: `${faker.person.firstName()} ${faker.person.lastName()}`, 
+//           publisher: faker.company.name(), 
+//           likes: parseFloat(faker.number.float({ min: 0, max: 10 }).toFixed(1)), 
+//           reviews: Array.from({ length: Math.floor(reviews) }, (_, i) => {
+//               faker.seed(seed + index + i + 1000); 
+//               return {
+//                   text: faker.lorem.sentence(),
+//                   author: `${faker.person.firstName()} ${faker.person.lastName()}`,
+//               };
+//           }),
+//           cover: faker.image.url({ width: 200, height: 300, category: "book" }), // Last call
+//       };
+//   });
+
+//   setBooks(newBooks);
+//   setLoading(false);
+// }, [language, seed, likes, reviews, page]);
 const generateBooks = useCallback(() => {
   setLoading(true);
 
   faker.locale = language;
 
   const newBooks = Array.from({ length: page * 10 }, (_, index) => {
-      faker.seed(seed + index);  
       
+      faker.seed(seed + index);  
+      const bookTitle = generateBookTitle(language, seed + index); 
+
+      
+      faker.seed(seed + index + language.hashCode()); 
+
+      const author = `${faker.person.firstName()} ${faker.person.lastName()}`;
+      const publisher = faker.company.name();
+
       return {
           isbn: uuidv4(), 
-          title: generateBookTitle(language, seed + index), 
-          author: `${faker.person.firstName()} ${faker.person.lastName()}`, 
-          publisher: faker.company.name(), 
+          title: bookTitle, 
+          author: author, 
+          publisher: publisher, 
           likes: parseFloat(faker.number.float({ min: 0, max: 10 }).toFixed(1)), 
           reviews: Array.from({ length: Math.floor(reviews) }, (_, i) => {
               faker.seed(seed + index + i + 1000); 
@@ -260,13 +296,24 @@ const generateBooks = useCallback(() => {
                   author: `${faker.person.firstName()} ${faker.person.lastName()}`,
               };
           }),
-          cover: faker.image.url({ width: 200, height: 300, category: "book" }), // Last call
+          cover: faker.image.url({ width: 200, height: 300, category: "book" }), 
       };
   });
 
   setBooks(newBooks);
   setLoading(false);
 }, [language, seed, likes, reviews, page]);
+
+
+String.prototype.hashCode = function () {
+    var hash = 0, i, chr;
+    for (i = 0; i < this.length; i++) {
+        chr = this.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+    }
+    return hash;
+};
+
 
 
 
