@@ -109,7 +109,7 @@ const generateBooks = useCallback((pageNum) => {
   faker.seed(seed + pageNum);
 
   const newBooks = Array.from({ length: pageNum === 1 ? 20 : 10 }, () => {
-      const bookLikes = parseFloat((Math.random() * 10).toFixed(1)); // Generate likes
+      const bookLikes = parseFloat((Math.random() * 10).toFixed(1)); 
       return {
           isbn: uuidv4(),
           title: generateBookTitle(language), 
